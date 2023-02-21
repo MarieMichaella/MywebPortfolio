@@ -27,25 +27,24 @@
 </div>
 
     <script>
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const articleName = urlParams.get('name');
-        const articleMessage = urlParams.get('message');
-        const articlePicture = urlParams.get('picture');
-        
-        const articleNameElement = document.getElementById('article-name');
-        const articleMessageElement = document.getElementById('article-message');
-        const articlePictureElement = document.createElement('img');
-        
-        articleNameElement.textContent = articleName;
-        articleMessageElement.textContent = articleMessage;
-        
-        articlePictureElement.src = articlePicture;
-        articlePictureElement.alt = articleName;
-        articlePictureElement.className = 'article-picture';
-        
-        const articleContainerElement = document.getElementById('article-container');
-        articleContainerElement.appendChild(articlePictureElement);
+        const articleName = localStorage.getItem('articleName');
+const articleMessage = localStorage.getItem('articleMessage');
+const articlePicture = localStorage.getItem('articlePicture');
+
+const articleNameElement = document.getElementById('article-name');
+const articleMessageElement = document.getElementById('article-message');
+const articlePictureElement = document.createElement('img');
+
+articleNameElement.textContent = articleName;
+articleMessageElement.textContent = articleMessage;
+
+articlePictureElement.src = articlePicture;
+articlePictureElement.alt = articleName;
+articlePictureElement.className = 'article-picture';
+
+const articleContainerElement = document.getElementById('article-container');
+articleContainerElement.appendChild(articlePictureElement);
+
         </script>
         
   </body>

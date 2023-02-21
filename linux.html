@@ -67,15 +67,15 @@ storedArticles.forEach(article => {
 function viewArticle(id) {
   const article = storedArticles.find(article => article.id === id);
   if (article) {
-    const articleName = encodeURIComponent(article.Articlename);
-    const articlePicture = encodeURIComponent(article.ArticlePicture);
-    const articleMessage = encodeURIComponent(article.message);
-    const url = `article-page.html?name=${articleName}&picture=${articlePicture}&message=${articleMessage}`;
-    window.location.href = url;
+    localStorage.setItem('articleName', article.Articlename);
+    localStorage.setItem('articlePicture', article.ArticlePicture);
+    localStorage.setItem('articleMessage', article.message);
+    window.location.href = 'article-page.html';
   } else {
     console.log(`Article with id ${id} not found`);
   }
 }
+
 
 
     
