@@ -90,19 +90,18 @@
     <div id="gallery-item"></div>
   </div>
     <script>
-    const storedArticles = JSON.parse(localStorage.getItem('articles'));
+ const storedArticles = JSON.parse(localStorage.getItem('articles'));
 
 const articleList = document.getElementById('article-list');
-
 
 storedArticles.forEach(article => {
   const articleElement = document.createElement('div');
   articleElement.className = 'gallery-item';
   articleElement.innerHTML = `
-    <h2 contenteditable="true">${article.Articlename}</h2>
-    <img src="${article.ArticlePicture}" alt="${article.Articlename}" contenteditable="true">
+    <h2>${article.Articlename}</h2>
+    <img src="${article.ArticlePicture}" alt="${article.Articlename}">
     <input type="file" accept="image/*" style="display: none;">
-    <p contenteditable="true">${article.ArticleDescription}</p>
+    <p>${article.ArticleDescription}</p>
   `;
 
   const deleteButton = document.createElement('button');
@@ -118,41 +117,64 @@ storedArticles.forEach(article => {
     }
   });
 
-  const saveButton = document.createElement('button');
-saveButton.setAttribute('type', 'button');
-saveButton.textContent = 'Save';
-saveButton.classList.add('my-button1');
-saveButton.addEventListener('click', () => {
-  article.Articlename = articleElement.querySelector('h2').textContent;
-  article.ArticlePicture = articleElement.querySelector('img').getAttribute('src');
-  article.ArticleDescription = articleElement.querySelector('p').textContent;
-  localStorage.setItem('articles', JSON.stringify(storedArticles));
-  alert('Article saved!');
-});
+  const editButton = document.createElement('button');
+  editButton.setAttribute('type', 'button');
+  editButton.textContent = 'Edit';
+  editButton.classList.add('my-button2');
+  editButton.addEventListener('click', () => {
+    articleElement.querySelectorAll('h2, img, p').forEach(element => {
+      element.setAttribute('contenteditable', true);
+      element.classList.add('editable');
+    });
+    saveButton.style.display = 'inline-block';
+    editButton.style.display = 'none';
+    isEditing = true; // Set isEditing to true
 
-  const imageInput = articleElement.querySelector('input[type="file"]');
-  articleElement.addEventListener('click', event => {
-    if (event.target === articleElement.querySelector('img')) {
-      imageInput.click();
-    }
+    const imageInput = articleElement.querySelector('input[type="file"]');
+    articleElement.addEventListener('click', event => {
+      if (isEditing && event.target === articleElement.querySelector('img')) {
+        imageInput.click();
+      }
+    });
+
+    imageInput.addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => {
+          const imageSrc = reader.result;
+          articleElement.querySelector('img').setAttribute('src', imageSrc);
+        });
+        reader.readAsDataURL(file);
+      }
+    });
   });
 
-  imageInput.addEventListener('change', event => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.addEventListener('load', () => {
-        const imageSrc = reader.result;
-        articleElement.querySelector('img').setAttribute('src', imageSrc);
-      });
-      reader.readAsDataURL(file);
-    }
+  const saveButton = document.createElement('button');
+  saveButton.setAttribute('type', 'button');
+  saveButton.textContent = 'Save';
+  saveButton.classList.add('my-button1');
+  saveButton.style.display = 'none';
+  saveButton.addEventListener('click', () => {
+    article.Articlename = articleElement.querySelector('h2').textContent;
+    article.ArticlePicture = articleElement.querySelector('img').getAttribute('src');
+    article.ArticleDescription = articleElement.querySelector('p').textContent;
+    localStorage.setItem('articles', JSON.stringify(storedArticles));
+    articleElement.querySelectorAll('h2, img, p').forEach(element => {
+      element.setAttribute('contenteditable', false);
+      element.classList.remove('editable');
+    });
+    saveButton.style.display = 'none';
+    editButton.style.display = 'inline-block';
+    alert('Article saved!');
   });
 
   articleElement.appendChild(deleteButton);
+  articleElement.appendChild(editButton);
   articleElement.appendChild(saveButton);
   articleList.appendChild(articleElement);
 });
+
 
   
     </script>
