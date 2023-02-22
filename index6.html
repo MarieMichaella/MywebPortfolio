@@ -102,10 +102,14 @@
 
 </div>
      <script>
-                      const storedUsers = JSON.parse(localStorage.getItem('users'));
+                      
 
-// loop through the users and display them on the page
+
+
+
+const storedUsers = JSON.parse(localStorage.getItem('users'));
 const userList = document.getElementById('user-List');
+const userElements = [];
 
 storedUsers.forEach(user => {
   const userElement = document.createElement('div');
@@ -115,8 +119,35 @@ storedUsers.forEach(user => {
     <h4>${user.username}</h4>
     <h4>${user.email}</h4>
   `;
+  
+  const deleteButton = document.createElement('button');
+  deleteButton.setAttribute('type', 'button');
+  deleteButton.textContent = 'Delete';
+  deleteButton.classList.add('my-button');
+  deleteButton.dataset.id = user.id;
+  deleteButton.addEventListener('click', () => {
+    const index = storedUsers.findIndex(u => u.id === user.id);
+    if (index !== -1) {
+      const confirmed = confirm(`Are you sure you want to delete ${user.username}?`);
+      if (confirmed) {
+      storedUsers.splice(index, 1);
+      localStorage.setItem('users', JSON.stringify(storedUsers));
+      userElements[index].remove();
+      alert(`The user ${user.username} has been deleted`);
+      }
+      
+    }
+  });
+  
+  userElement.appendChild(deleteButton);
+  userElements.push(userElement);
   userList.appendChild(userElement);
 });
+
+// add a click event listener to all delete buttons
+
+
+
 
 
 /*const deleteButton = document.createElement('button');

@@ -39,11 +39,22 @@ function validatePassword(password) {
   }
 
 
-  function addUserToLocalStorage(username,password, email) {
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    users.push({ username, password, email });
-    localStorage.setItem("users", JSON.stringify(users));
-  }
+ function addUserToLocalStorage(username, password, email) {
+  const users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // Generate a unique ID for the new user
+  const id = Date.now().toString();
+
+  // Create a new user object with the ID and other data
+  const user = { id, username, password, email };
+
+  // Push the new user object to the users array
+  users.push(user);
+
+  // Store the updated users array in localStorage
+  localStorage.setItem("users", JSON.stringify(users));
+}
+
   
 
   const validateInputs = () => {
